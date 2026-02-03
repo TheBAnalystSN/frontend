@@ -8,26 +8,30 @@ import Header from "./components/Header";
 
 export default function App() {
   return (
-    
-    <><>
-      <Header />
-      {/* existing routes / layout below */}
-      
-    </><AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <>
+          <Header />
 
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+          <main className="container">
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-            <Route
-              path="/dashboard"
-              element={<ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider></>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </main>
+        </>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
