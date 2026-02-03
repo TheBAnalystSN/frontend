@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   const isAdmin = user?.role === "admin";
 
-  console.log("CURRENT USER OBJECT:", user);
+  console.log("PROFILE USER:", user);
 
 
   const loadTickets = async () => {
