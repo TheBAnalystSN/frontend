@@ -23,7 +23,7 @@ input, textarea, select {
   padding: 10px;
   width: 100%;
   box-sizing: border-box;
-  background: #fff;
+  background: lightgray;
 }
 
 textarea {
@@ -32,14 +32,14 @@ textarea {
 
 button {
   border: 1px solid #ddd;
-  background: #fff;
+  background: #161515;
   border-radius: 8px;
   padding: 10px 14px;
   cursor: pointer;
 }
 
 button:hover {
-  background: #f2f2f2;
+  background: black;
 }
 
 button:disabled {
@@ -79,3 +79,20 @@ button:disabled {
 .success {
   color: #1a7f37;
 }
+.header {
+  background: #111;
+  color: #fff;
+  padding: 16px 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.header span {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
