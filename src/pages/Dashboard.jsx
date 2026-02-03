@@ -19,6 +19,9 @@ export default function Dashboard() {
 
   const isAdmin = user?.role === "admin";
 
+  console.log("CURRENT USER OBJECT:", user);
+
+
   const loadTickets = async () => {
     try {
       setError("");
