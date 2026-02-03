@@ -48,9 +48,9 @@ button:disabled {
 }
 
 .container {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 18px 16px;
 }
 
 .card {
