@@ -1,9 +1,10 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useEffect, useState } from "react";
 import client from "../api/client";
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -11,9 +12,9 @@ export function AuthProvider({ children }) {
     try {
       const res = await client.get("/api/users/profile");
       setUser(res.data);
-    } catch (err) {
-      setUser(null);
+    } catch {
       localStorage.removeItem("token");
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -21,22 +22,14 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      loadProfile();
-    } else {
-      setLoading(false);
-    }
+    if (token) loadProfile();
+    else setLoading(false);
   }, []);
 
   const login = async (email, password) => {
     const res = await client.post("/api/auth/login", { email, password });
     localStorage.setItem("token", res.data.token);
-    await loadProfile();
-  };
-
-  const register = async (name, email, password) => {
-    await client.post("/api/auth/register", { name, email, password });
-    // after register, user still needs to login to get a token
+    setUser(res.data.user);
   };
 
   const logout = () => {
@@ -44,14 +37,12 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  const value = useMemo(
-    () => ({ user, loading, login, register, logout }),
-    [user, loading]
+  return (
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
   );
+};
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+export const useAuth = () => useContext(AuthContext);
 
-export function useAuth() {
-  return useContext(AuthContext);
-}

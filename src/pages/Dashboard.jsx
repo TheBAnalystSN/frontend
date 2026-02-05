@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import client from "../api/client";
 import { useAuth } from "../context/AuthContext";
@@ -22,6 +23,12 @@ export default function Dashboard() {
   console.log("PROFILE USER:", user);
 
 
+
+const fetchAllTickets = async () => {
+  const res = await client.get("/api/tickets/admin/all");
+  setTickets(res.data);
+};
+
   const loadTickets = async () => {
     try {
       setError("");
@@ -39,8 +46,13 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (user) loadTickets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (user) return;
+
+    if (user.role === "admin") {
+      fetchAllTickets();
+    } else {
+      fetchAllTickets();
+    }
   }, [user]);
 
   const resetCreateMessages = () => {
