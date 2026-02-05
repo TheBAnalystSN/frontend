@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import client from "../api/client";
 import { useAuth } from "../context/AuthContext";
@@ -20,14 +19,12 @@ export default function Dashboard() {
 
   const isAdmin = user?.role === "admin";
 
-  console.log("PROFILE USER:", user);
-
-
-
-const fetchAllTickets = async () => {
-  const res = await client.get("/api/tickets/admin/all");
-  setTickets(res.data);
-};
+  // log user ONCE when it changes (debug only)
+  useEffect(() => {
+    if (user) {
+      console.log("PROFILE USER:", user);
+    }
+  }, [user]);
 
   const loadTickets = async () => {
     try {
@@ -45,14 +42,10 @@ const fetchAllTickets = async () => {
     }
   };
 
+  // load tickets once user is available
   useEffect(() => {
-    if (user) return;
-
-    if (user.role === "admin") {
-      fetchAllTickets();
-    } else {
-      fetchAllTickets();
-    }
+    if (!user) return;
+    loadTickets();
   }, [user]);
 
   const resetCreateMessages = () => {
@@ -107,7 +100,6 @@ const fetchAllTickets = async () => {
 
       {error && <p style={{ color: "crimson" }}>{error}</p>}
 
-      {/* Create Ticket (users only) */}
       {!isAdmin && (
         <div
           style={{
@@ -117,7 +109,7 @@ const fetchAllTickets = async () => {
             marginTop: 16,
           }}
         >
-          <h3 style={{ marginTop: 0 }}>Create Ticket</h3>
+          <h3>Create Ticket</h3>
 
           {createError && <p style={{ color: "crimson" }}>{createError}</p>}
           {createMsg && <p style={{ color: "green" }}>{createMsg}</p>}
@@ -128,7 +120,6 @@ const fetchAllTickets = async () => {
               style={{ width: "100%", padding: 10, margin: "6px 0 12px" }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Laptop not turning on"
             />
 
             <label>Description</label>
@@ -137,7 +128,6 @@ const fetchAllTickets = async () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              placeholder="The laptop does not power on at all."
             />
 
             <label>Priority</label>
@@ -151,18 +141,16 @@ const fetchAllTickets = async () => {
               <option value="High">High</option>
             </select>
 
-            <button
-              style={{ padding: "10px 14px" }}
-              type="submit"
-              disabled={creating}
-            >
+            <button type="submit" disabled={creating}>
               {creating ? "Creating..." : "Submit Ticket"}
             </button>
           </form>
         </div>
       )}
 
-      <h3 style={{ marginTop: 20 }}>{isAdmin ? "All Tickets" : "My Tickets"}</h3>
+      <h3 style={{ marginTop: 20 }}>
+        {isAdmin ? "All Tickets" : "My Tickets"}
+      </h3>
 
       {loadingTickets ? (
         <p>Loading tickets...</p>
@@ -173,19 +161,15 @@ const fetchAllTickets = async () => {
           {tickets.map((t) => (
             <div
               key={t._id}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: 8,
-                padding: 12,
-              }}
+              style={{ border: "1px solid #ddd", borderRadius: 8, padding: 12 }}
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <b>{t.title}</b>
                 <span>{t.status}</span>
               </div>
-              <p style={{ margin: "6px 0" }}>{t.description}</p>
+              <p>{t.description}</p>
               <small>
-                Priority: {t.priority} | Created:{" "}
+                Priority: {t.priority} |{" "}
                 {new Date(t.createdAt).toLocaleString()}
               </small>
             </div>
