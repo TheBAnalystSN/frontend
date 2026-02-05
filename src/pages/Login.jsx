@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
@@ -13,6 +13,7 @@ export default function Login() {
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     try {
       await login(email, password);
       navigate("/dashboard");
@@ -22,34 +23,30 @@ export default function Login() {
   };
 
   return (
-    <div style={{ maxWidth: 420, margin: "40px auto", padding: 16 }}>
+    <div style={{ maxWidth: 400, margin: "40px auto" }}>
       <h2>Login</h2>
+
       {error && <p style={{ color: "crimson" }}>{error}</p>}
+
       <form onSubmit={onSubmit}>
-        <label>Email</label>
         <input
-          style={{ width: "100%", padding: 10, margin: "6px 0 12px" }}
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          type="email"
+          style={{ width: "100%", padding: 10, marginBottom: 10 }}
         />
-
-        <label>Password</label>
         <input
-          style={{ width: "100%", padding: 10, margin: "6px 0 12px" }}
+          type="password"
+          placeholder="Password"
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          type="password"
+          style={{ width: "100%", padding: 10, marginBottom: 10 }}
         />
-
-        <button style={{ padding: "10px 14px" }} type="submit">
-          Sign in
+        <button style={{ width: "100%", padding: 10 }}>
+          Login
         </button>
       </form>
-
-      <p style={{ marginTop: 12 }}>
-        No account? <Link to="/register">Register</Link>
-      </p>
     </div>
   );
 }
