@@ -1,13 +1,17 @@
 import axios from "axios";
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
 });
 
-// token automatically attaches if it exists
 client.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  const stored = localStorage.getItem("auth");
+  if (stored) {
+    const auth = JSON.parse(stored);
+    if (auth?.token) {
+      config.headers.Authorization = `Bearer ${auth.token}`;
+    }
+  }
   return config;
 });
 
