@@ -8,13 +8,13 @@ export default function Tickets() {
   const [description, setDescription] = useState("");
   const [tickets, setTickets] = useState([]);
 
-  const loadTickets = async () => {
-    const res = await client.get("/api/tickets");
-    setTickets(res.data);
-  };
-
   useEffect(() => {
-    loadTickets();
+    const fetchTickets = async () => {
+      const res = await client.get("/api/tickets");
+      setTickets(res.data);
+    };
+
+    fetchTickets();
   }, []);
 
   const submit = async (e) => {
@@ -22,7 +22,9 @@ export default function Tickets() {
     await client.post("/api/tickets", { title, description });
     setTitle("");
     setDescription("");
-    loadTickets();
+
+    const res = await client.get("/api/tickets");
+    setTickets(res.data);
   };
 
   return (
